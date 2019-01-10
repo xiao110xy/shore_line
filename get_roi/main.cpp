@@ -1,7 +1,6 @@
 ﻿
 // assist_water.cpp: 定义控制台应用程序的入口点。
 //
-
 #include "water.h"
 
 int main(int argc, char** argv)
@@ -33,7 +32,6 @@ int main(int argc, char** argv)
 	string assist_image_name(base_path + "assist_" + base_name + string(image_name.end() - 4, image_name.end()));
 	string assist_txt_name(base_path + "assist_" + base_name + ".txt");
 	string mask_image_name(base_path + "mask_" + base_name + ".png");
-	string mask_txt_name(base_path + "mask_" + base_name + ".txt");
 	string template_image_name(base_path + "template.png");
 	string result_image(base_path + "result_" + base_name + ".jpg");
 	string result_txt(base_path + "result_" + base_name + ".txt");
@@ -41,7 +39,6 @@ int main(int argc, char** argv)
 	main_ini.insert(map<string, string>::value_type("assist_image", assist_image_name));
 	main_ini.insert(map<string, string>::value_type("assist_txt", assist_txt_name));
 	main_ini.insert(map<string, string>::value_type("mask_image", mask_image_name));
-	main_ini.insert(map<string, string>::value_type("mask_txt", mask_txt_name));
 	main_ini.insert(map<string, string>::value_type("template", template_image_name));
 	main_ini.insert(map<string, string>::value_type("result_image", result_image));
 	main_ini.insert(map<string, string>::value_type("result_txt", result_txt));
@@ -65,8 +62,6 @@ int main(int argc, char** argv)
 		cout << " assist file error \n";
 		return -2;
 	}
-	compute_water_area(image, assist_files, main_ini["mask_image"]);
-	opt_assist_files(assist_files);
-	save_file(image, assist_files, main_ini);
+	save_maskfile(assist_files, main_ini);
 	return 1;
 }

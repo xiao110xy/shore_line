@@ -112,8 +112,11 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		//
 		temp_assist_files.push_back(temp_assist_file);
 	}
-	if (assist_index < 0.5)
+	if (assist_index >= 0) {
 		int i = 0;
+		return true;
+	}
+
 	vector<Mat> d_image = cal_search_feature(im);
 	vector<Feature> contours;
 	Rect base_rect;
@@ -130,6 +133,7 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		).clone();
 		contours = make_template(im2, base_rect);
 		find_object(im, d_image, im2, base_rect, contours, result_point, score);
+		//
 		result = draw_contours(im, contours, result_point, 3);
 		if (assist_files.size() == temp.roi_order) {
 			if (score < assist_files[temp.roi_order-1].correct_score)
@@ -140,6 +144,10 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		}
 		if (score < match_t)
 			continue;
+		// 偏移量求解
+		temp.base_point.x = result_point.x - base_rect.x - temp.sub_roi[0];
+		temp.base_point.y = result_point.y - base_rect.y - temp.sub_roi[1];
+
 		Mat homography = Mat::zeros(Size(3, 3), CV_32F);
 		homography.at<float>(0, 0) = 1; homography.at<float>(1, 1) = 1; homography.at<float>(2, 2) = 1;
 		homography.at<float>(0, 2) = result_point.x - base_rect.x;
@@ -1004,6 +1012,33 @@ void save_file(Mat im, vector<assist_information> assist_files, map<string, stri
 		}
 		file << ";"<<endl;
 	}
+	file.close();
+}
+
+void save_maskfile(vector<assist_information> assist_files, map<string, string> main_ini)
+{
+	stable_sort(assist_files.begin(), assist_files.end(),
+		[](assist_information a, assist_information b) {return a.roi_order < b.roi_order; });
+	// 读写文件
+	string save_name(main_ini["mask_image"].begin(), main_ini["mask_image"].end() - 4);
+	save_name = save_name + ".txt";
+	ofstream file(save_name);
+	for (int i = 0; i < assist_files.size(); ++i) {
+		assist_information assist_file = assist_files[i];
+		file << assist_file.ref_index << ";";
+		file << endl;
+		//
+		file << fixed << setprecision(2) << assist_file.base_point.x << "," ;
+		file << fixed << setprecision(2) << assist_file.base_point.y << ";" ;
+		file << endl;
+		//
+		file << assist_file.roi[0] << ",";
+		file << assist_file.roi[1] << ",";
+		file << assist_file.roi[2] << ",";
+		file << assist_file.roi[3] << ";";
+		file << endl;
+	}
+
 	file.close();
 }
 
