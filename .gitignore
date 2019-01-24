@@ -7,3 +7,11 @@ get_line/Debug
 #
 .vs
 *.pro.user
+/get_roi/sync.ffs_db
+/get_line/sync.ffs_db
+/get_line/Release/get_line.tlog
+/get_roi/get_roi.vcxproj
+*.filters
+*.ipdb
+*.iobj
+/BatchRun.ffs_batch

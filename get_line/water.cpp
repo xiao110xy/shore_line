@@ -40,7 +40,7 @@ vector<string> getFiles(string folder, string firstname, string lastname)
 }
 
 
-bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> & assist_files,int assist_index)
+bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> & assist_files, bool assist_flag)
 {
 	fstream assist_file_name(main_ini["assist_txt"]);
 	if (!assist_file_name)
@@ -112,8 +112,11 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		//
 		temp_assist_files.push_back(temp_assist_file);
 	}
-	if (assist_index < 0.5)
-		int i = 0;
+	if (assist_flag) {
+		assist_files = temp_assist_files;
+		return true;
+	}
+
 	vector<Mat> d_image = cal_search_feature(im);
 	vector<Feature> contours;
 	Rect base_rect;
@@ -130,6 +133,7 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		).clone();
 		contours = make_template(im2, base_rect);
 		find_object(im, d_image, im2, base_rect, contours, result_point, score);
+		//
 		result = draw_contours(im, contours, result_point, 3);
 		if (assist_files.size() == temp.roi_order) {
 			if (score < assist_files[temp.roi_order-1].correct_score)
@@ -140,6 +144,10 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		}
 		if (score < match_t)
 			continue;
+		// 偏移量求解
+		temp.base_point.x = result_point.x - base_rect.x - temp.sub_roi[0];
+		temp.base_point.y = result_point.y - base_rect.y - temp.sub_roi[1];
+
 		Mat homography = Mat::zeros(Size(3, 3), CV_32F);
 		homography.at<float>(0, 0) = 1; homography.at<float>(1, 1) = 1; homography.at<float>(2, 2) = 1;
 		homography.at<float>(0, 2) = result_point.x - base_rect.x;
@@ -205,6 +213,17 @@ bool input_assist_image(string file_name, assist_information &assist_file)
 	assist_file.assist_image = temp_image.clone();
 	return true;
 }
+bool get_roi(vector<assist_information>& assist_files, map<string, string> main_ini)
+{
+	string temp (main_ini["mask_image"].begin(), main_ini["mask_image"].end()-4);
+	temp = temp + ".txt";
+	fstream mask_file_name(temp);
+	if (!mask_file_name)
+		return false;
+	// 用于边缘检测时排除干扰
+	while (!mask_file_name.eof()){
+	}
+}
 void compute_water_area(Mat im, vector<assist_information> &assist_files, string ref_name)
 {
 	for (auto &assist_file : assist_files) {
@@ -224,8 +243,14 @@ void compute_water_area(Mat im, vector<assist_information> &assist_files, string
 			assist_file.water_line = get_water_line_seg(image_rotate.colRange(image_rotate.cols/3, image_rotate.cols*2 / 3), assist_file.length);
 		}
 		if (assist_file.water_line < 0) {
-			assist_file.parrallel_lines.clear();
-			continue;
+			Scalar mask_value = sum(mask == 255);
+			if (mask_value[0] > 20)
+				assist_file.water_line = 0;
+			else {
+				assist_file.parrallel_lines.clear();
+				continue;
+			}
+
 		}
 		linetonumber(assist_file);
 	}
@@ -874,6 +899,8 @@ int get_water_line_seg(Mat im, int length, int add_rows, float scale)
 	}
 	if (abs(im.rows - seg_line) < 5)
 		return seg_line;
+	if (seg_line < n_length)
+		return seg_line;
 	for (int i = seg_line; i < im.rows; ++i) {
 		im_score[i] = 0;
 	}
@@ -1004,6 +1031,33 @@ void save_file(Mat im, vector<assist_information> assist_files, map<string, stri
 		}
 		file << ";"<<endl;
 	}
+	file.close();
+}
+
+void save_maskfile(vector<assist_information> assist_files, map<string, string> main_ini)
+{
+	stable_sort(assist_files.begin(), assist_files.end(),
+		[](assist_information a, assist_information b) {return a.roi_order < b.roi_order; });
+	// 读写文件
+	string save_name(main_ini["mask_image"].begin(), main_ini["mask_image"].end() - 4);
+	save_name = save_name + ".txt";
+	ofstream file(save_name);
+	for (int i = 0; i < assist_files.size(); ++i) {
+		assist_information assist_file = assist_files[i];
+		file << assist_file.ref_index << ";";
+		file << endl;
+		////
+		//file << fixed << setprecision(2) << assist_file.base_point.x << "," ;
+		//file << fixed << setprecision(2) << assist_file.base_point.y << ";" ;
+		//file << endl;
+		//
+		file << assist_file.roi[0] - assist_file.base_point.x << ",";
+		file << assist_file.roi[1] - assist_file.base_point.y << ",";
+		file << assist_file.roi[2] - assist_file.base_point.x << ",";
+		file << assist_file.roi[3] - assist_file.base_point.y << ";";
+		file << endl;
+	}
+
 	file.close();
 }
 
@@ -1278,6 +1332,8 @@ double linetonumber(assist_information& assist_file)
 		if (k >=-0.1) {
 			if (k > 1)
 				k = 1.01;
+			if (k < 0)
+				k = 0;
 			assist_file.water_number = k * (point[i + 1][1] - point[i][1]) + point[i][1];
 			assist_file.water_number = assist_file.water_number * assist_file.length/ assist_file.base_image.rows;
 			wrap_point.x = last.x + k * (first.x - last.x);

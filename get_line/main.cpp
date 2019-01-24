@@ -4,6 +4,7 @@
 
 #include "water.h"
 
+#define mask_flag false
 int main(int argc, char** argv)
 {
 	if (argc < 2) {
@@ -33,7 +34,6 @@ int main(int argc, char** argv)
 	string assist_image_name(base_path + "assist_" + base_name + string(image_name.end() - 4, image_name.end()));
 	string assist_txt_name(base_path + "assist_" + base_name + ".txt");
 	string mask_image_name(base_path + "mask_" + base_name + ".png");
-	string mask_txt_name(base_path + "mask_" + base_name + ".txt");
 	string template_image_name(base_path + "template.png");
 	string result_image(base_path + "result_" + base_name + ".jpg");
 	string result_txt(base_path + "result_" + base_name + ".txt");
@@ -41,7 +41,6 @@ int main(int argc, char** argv)
 	main_ini.insert(map<string, string>::value_type("assist_image", assist_image_name));
 	main_ini.insert(map<string, string>::value_type("assist_txt", assist_txt_name));
 	main_ini.insert(map<string, string>::value_type("mask_image", mask_image_name));
-	main_ini.insert(map<string, string>::value_type("mask_txt", mask_txt_name));
 	main_ini.insert(map<string, string>::value_type("template", template_image_name));
 	main_ini.insert(map<string, string>::value_type("result_image", result_image));
 	main_ini.insert(map<string, string>::value_type("result_txt", result_txt));
@@ -60,11 +59,21 @@ int main(int argc, char** argv)
 	}
 	// assit txt
 	vector<assist_information> assist_files;
-	bool flag = input_assist(image, main_ini, assist_files);
+	bool flag = input_assist(image, main_ini, assist_files, mask_flag);
 	if (!flag) { 
 		cout << " assist file error \n";
 		return -2;
 	}
+	if (mask_flag) {
+		flag = get_roi(assist_files, main_ini);
+		if (!flag) {
+			cout << " mask txt error \n";
+			return -3;
+		}
+	}
+
+	//
+	//
 	compute_water_area(image, assist_files, main_ini["mask_image"]);
 	opt_assist_files(assist_files);
 	save_file(image, assist_files, main_ini);

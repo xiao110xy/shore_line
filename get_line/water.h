@@ -56,6 +56,7 @@ struct assist_information {
 	double correct_score = -1;
 	vector<vector<double>> temp_correct_point;
 	vector<vector<double>> correct_point;
+	Point2f base_point{ 0, 0 };
 	//float correct_line;
 	// 校正用点
 	bool correct2poly = true;
@@ -90,9 +91,10 @@ struct assist_information {
 
 // 读入辅助信息
 vector<string> getFiles(string folder, string firstname, string lastname);
-bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> &assist_files, int assist_index = -1);
+bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> &assist_files, bool assist_flag = false);
 bool get_number(string line_string, vector<double> &temp);
 bool input_assist_image(string file_name,assist_information &assist_file);
+bool get_roi(vector<assist_information> &assist_files, map<string, string> main_ini);
 // 处理主函数
 void compute_water_area(Mat im, vector<assist_information> &assist_files,string ref_name);
 void opt_assist_files(vector<assist_information> &assist_files);
@@ -120,6 +122,7 @@ bool left_right_water(Mat gc_im,int length);
 int get_water_line_seg(Mat im, int length, int add_rows = 100, float scale = 0.2);
 // 结果保存
 void save_file(Mat im, vector<assist_information> assist_files,map<string,string> main_ini);
+void save_maskfile(vector<assist_information> assist_files, map<string, string> main_ini);
 // 功能函数
 vector<vector<double>> part_row_point(vector<vector<double>> point,int r1,int r2);
 vector<vector<double>> part_col_point(vector<vector<double>> point,int c1,int c2);

@@ -40,7 +40,7 @@ vector<string> getFiles(string folder, string firstname, string lastname)
 }
 
 
-bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> & assist_files,int assist_index)
+bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> & assist_files, bool assist_flag)
 {
 	fstream assist_file_name(main_ini["assist_txt"]);
 	if (!assist_file_name)
@@ -112,8 +112,8 @@ bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information
 		//
 		temp_assist_files.push_back(temp_assist_file);
 	}
-	if (assist_index >= 0) {
-		int i = 0;
+	if (assist_flag) {
+		assist_files = temp_assist_files;
 		return true;
 	}
 
@@ -1031,11 +1031,11 @@ void save_maskfile(vector<assist_information> assist_files, map<string, string> 
 		file << fixed << setprecision(2) << assist_file.base_point.x << "," ;
 		file << fixed << setprecision(2) << assist_file.base_point.y << ";" ;
 		file << endl;
-		//
-		file << assist_file.roi[0] << ",";
-		file << assist_file.roi[1] << ",";
-		file << assist_file.roi[2] << ",";
-		file << assist_file.roi[3] << ";";
+		
+		file << assist_file.roi[0] - assist_file.base_point.x << ",";
+		file << assist_file.roi[1] - assist_file.base_point.y << ",";
+		file << assist_file.roi[2] - assist_file.base_point.x << ",";
+		file << assist_file.roi[3] - assist_file.base_point.y << ";";
 		file << endl;
 	}
 

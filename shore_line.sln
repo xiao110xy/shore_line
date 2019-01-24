@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "get_line", "get_line\get_line.vcxproj", "{234FE534-FE13-4652-B07E-5AF543A80777}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "get_roi", "get_roi\get_roi.vcxproj", "{A327B405-9E6B-4138-A753-C527E3BB0ECE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -19,6 +21,12 @@ Global
 		{234FE534-FE13-4652-B07E-5AF543A80777}.Release|x64.ActiveCfg = Release|Win32
 		{234FE534-FE13-4652-B07E-5AF543A80777}.Release|x86.ActiveCfg = Release|Win32
 		{234FE534-FE13-4652-B07E-5AF543A80777}.Release|x86.Build.0 = Release|Win32
+		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Debug|x64.ActiveCfg = Debug|Win32
+		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Debug|x86.ActiveCfg = Debug|Win32
+		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Debug|x86.Build.0 = Debug|Win32
+		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Release|x64.ActiveCfg = Release|Win32
+		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Release|x86.ActiveCfg = Release|Win32
+		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -91,7 +91,7 @@ struct assist_information {
 
 // 读入辅助信息
 vector<string> getFiles(string folder, string firstname, string lastname);
-bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> &assist_files, int assist_index = -1);
+bool input_assist(Mat im,map<string, string> main_ini, vector<assist_information> &assist_files, bool assist_flag = false);
 bool get_number(string line_string, vector<double> &temp);
 bool input_assist_image(string file_name,assist_information &assist_file);
 // 处理主函数
