@@ -244,13 +244,10 @@ void compute_water_area(Mat im, vector<assist_information> &assist_files, string
 		}
 		if (assist_file.water_line < 0) {
 			Scalar mask_value = sum(mask == 255);
-			if (mask_value[0] > 20)
-				assist_file.water_line = 0;
-			else {
+			if (mask_value[0]<20){
 				assist_file.parrallel_lines.clear();
 				continue;
 			}
-
 		}
 		linetonumber(assist_file);
 	}
@@ -1330,10 +1327,10 @@ double linetonumber(assist_information& assist_file)
 		double k = ((wrap_point.x - last.x)*(first.x - last.x) + (wrap_point.y - last.y)*(first.y - last.y)) / d2;
 		
 		if (k >=-0.1) {
-			if (k > 1)
-				k = 1.01;
+			if (k > 1.1)
+				k = 1.1;
 			if (k < 0)
-				k = 0;
+				return -1;
 			assist_file.water_number = k * (point[i + 1][1] - point[i][1]) + point[i][1];
 			assist_file.water_number = assist_file.water_number * assist_file.length/ assist_file.base_image.rows;
 			wrap_point.x = last.x + k * (first.x - last.x);
