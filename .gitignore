@@ -15,3 +15,5 @@ get_line/Debug
 *.ipdb
 *.iobj
 /BatchRun.ffs_batch
+/shore_line_seg/x64/Release/shore_line_seg.tlog
+/Release

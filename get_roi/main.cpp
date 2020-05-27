@@ -2,6 +2,9 @@
 // assist_water.cpp: 定义控制台应用程序的入口点。
 //
 #include "water.h"
+#include <torch/torch.h>
+#include <torch/script.h>
+#include <memory>
 
 int main(int argc, char** argv)
 {

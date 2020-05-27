@@ -59,18 +59,18 @@ int main(int argc, char** argv)
 	}
 	// assit txt
 	vector<assist_information> assist_files;
-	bool flag = input_assist(image, main_ini, assist_files, mask_flag);
+	bool flag = input_assist(image, main_ini, assist_files, true);
 	if (!flag) { 
 		cout << " assist file error \n";
 		return -2;
 	}
-	if (mask_flag) {
-		flag = get_roi(assist_files, main_ini);
-		if (!flag) {
-			cout << " mask txt error \n";
-			return -3;
-		}
-	}
+	//if (mask_flag) {
+	//	flag = get_roi(assist_files, main_ini);
+	//	if (!flag) {
+	//		cout << " mask txt error \n";
+	//		return -3;
+	//	}
+	//}
 
 	//
 	//

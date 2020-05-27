@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "get_line", "get_line\get_li
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "get_roi", "get_roi\get_roi.vcxproj", "{A327B405-9E6B-4138-A753-C527E3BB0ECE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shore_line_seg", "shore_line_seg\shore_line_seg.vcxproj", "{D32E4C91-524A-4E80-9D86-8982A6BBAF14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,14 @@ Global
 		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Release|x64.ActiveCfg = Release|Win32
 		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Release|x86.ActiveCfg = Release|Win32
 		{A327B405-9E6B-4138-A753-C527E3BB0ECE}.Release|x86.Build.0 = Release|Win32
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Debug|x64.ActiveCfg = Debug|x64
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Debug|x64.Build.0 = Debug|x64
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Debug|x86.ActiveCfg = Debug|Win32
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Debug|x86.Build.0 = Debug|Win32
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Release|x64.ActiveCfg = Release|x64
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Release|x64.Build.0 = Release|x64
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Release|x86.ActiveCfg = Release|Win32
+		{D32E4C91-524A-4E80-9D86-8982A6BBAF14}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
